@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2020_10_19_065840) do
+ActiveRecord::Schema.define(version: 2020_10_20_061114) do
 
   create_table "animals", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|
     t.string "name", null: false
@@ -19,11 +19,18 @@ ActiveRecord::Schema.define(version: 2020_10_19_065840) do
     t.string "sex", null: false
     t.string "prefecture", null: false
     t.bigint "user_id", null: false
-    t.bigint "post_id", null: false
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
-    t.index ["post_id"], name: "index_animals_on_post_id"
     t.index ["user_id"], name: "index_animals_on_user_id"
+  end
+
+  create_table "animals_posts", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|
+    t.bigint "animal_id"
+    t.bigint "post_id"
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["animal_id"], name: "index_animals_posts_on_animal_id"
+    t.index ["post_id"], name: "index_animals_posts_on_post_id"
   end
 
   create_table "posts", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|
@@ -31,8 +38,6 @@ ActiveRecord::Schema.define(version: 2020_10_19_065840) do
     t.bigint "user_id", null: false
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
-    t.bigint "animal_id", null: false
-    t.index ["animal_id"], name: "index_posts_on_animal_id"
     t.index ["user_id"], name: "index_posts_on_user_id"
   end
 
@@ -49,8 +54,8 @@ ActiveRecord::Schema.define(version: 2020_10_19_065840) do
     t.index ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true
   end
 
-  add_foreign_key "animals", "posts"
   add_foreign_key "animals", "users"
-  add_foreign_key "posts", "animals"
+  add_foreign_key "animals_posts", "animals"
+  add_foreign_key "animals_posts", "posts"
   add_foreign_key "posts", "users"
 end
